@@ -10,3 +10,17 @@ spec:
        - name: mycon2
          image: nginx
          imagePullPolicy: Never
+---
+apiVersion: v1
+kind: Service
+metadata: 
+    name: my-service
+spec:
+    selector: 
+         app: red
+    type: NodePort
+    ports:
+       - port: 80
+         targetPort: 80
+         nodePort: 31000
+       
