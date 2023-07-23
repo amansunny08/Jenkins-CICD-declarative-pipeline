@@ -1,3 +1,3 @@
-FROM centos:7
-RUN yum install -y tree
-RUN echo "hello world" > /tmp/hello.txt
+FROM nginx:latest
+COPY docker-pipeline.png /usr/share/nginx/html/
+RUN cat index.html > /usr/share/nginx/html/index.html
