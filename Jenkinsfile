@@ -50,7 +50,7 @@ pipeline {
                     remote.allowAnyHosts = true
                     def containerId = sshCommand(remote: remote, command:"docker ps -aqf \"name=aman\"").trim()
                     if (containerId) {
-                        sshCommand(remote: remote, command:docker stop ${containerId} && docker rm ${containerId})
+                        sshCommand(remote: remote, command:"docker stop ${containerId} && docker rm ${containerId}")
                     }
                     sshCommand remote: remote, command: "docker ps"
                     sshCommand remote: remote, command:  "${dockerRun}"
