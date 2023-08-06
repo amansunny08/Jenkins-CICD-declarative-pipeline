@@ -1,7 +1,7 @@
 pipeline {
      agent any
      environment {
-                dockerRun = 'docker container run -itd --name sunny -p 8081:80 amansunny08/aman-image:v1'
+                dockerRun = 'docker container run -itd --name aman -p 8081:80 amansunny08/aman-image:v1'
             }
 
     stages {
