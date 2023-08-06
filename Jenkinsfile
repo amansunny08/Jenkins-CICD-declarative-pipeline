@@ -1,8 +1,8 @@
 pipeline {
+     agent any
      environment {
-                dockerRun = 'docker container run -itd --name sunny -p 8083:80 amansunny08/aman-image:v1'
+                dockerRun = 'docker container run -itd --name sunny -p 8081:80 amansunny08/aman-image:v1'
             }
-    agent any
 
     stages {
         stage('checkout') {
@@ -25,7 +25,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'docker1', variable: 'dockerhub')]) {
                       sh 'docker login -u amansunny08 -p $dockerhub'
-}
+                }
             }
         }
         stage('push image') {
@@ -39,7 +39,7 @@ pipeline {
                sh 'cat ~/.docker/config.json'
             }
         }
-        stage('Launch container') {
+        stage('Launch container on remote host') {
             steps {
                 script {
                     def remote = [:]
@@ -48,6 +48,10 @@ pipeline {
                     remote.user = 'root'
                     remote.password = 'redhat'
                     remote.allowAnyHosts = true
+                    def containerId = sshCommand(remote: remote, command:"docker ps -aqf \"name=aman\"").trim()
+                    if (containerId) {
+                        sshCommand(remote: remote, command:docker stop ${containerId} && docker rm ${containerId})
+                    }
                     sshCommand remote: remote, command: "docker ps"
                     sshCommand remote: remote, command:  "${dockerRun}"
                     sshCommand remote: remote, command: "docker ps"
