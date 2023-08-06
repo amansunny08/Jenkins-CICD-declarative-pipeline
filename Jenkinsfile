@@ -5,7 +5,7 @@ pipeline {
             }
 
     stages {
-        stage('checkout') {
+        stage('checkout repo') {
             steps {
                git branch: 'main', credentialsId: 'git-id', url: 'https://github.com/amansunny08/jenkins-docker.git'
             }
@@ -31,6 +31,7 @@ pipeline {
         stage('push image') {
             steps {
                 sh 'docker push amansunny08/aman-image:v1 '
+                sh 'docker image rm amansunny08/aman-image:v1'
             }
         }
         stage('docker logout') {
@@ -53,7 +54,7 @@ pipeline {
                         sshCommand(remote: remote, command:"docker stop ${containerId} && docker rm ${containerId}")
                     }
                     sshCommand remote: remote, command: "docker ps"
-                    sshCommand remote: remote, command:  "${dockerRun}"
+                    sshCommand remote: remote, command: "${dockerRun}"
                     sshCommand remote: remote, command: "docker ps"
                     }
                 }
